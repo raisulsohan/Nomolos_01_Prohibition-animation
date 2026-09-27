@@ -7,10 +7,13 @@ The pages play silently.
 
 ## Watch
 
-Open any page in a browser. No build step and no server are needed.
+**Online: https://raisulsohan.github.io/Nomolos_01_Prohibition-animation/**. Play the whole film or any scene, in 16:9 or
+4:5.
 
-- `preview/` holds the film scene by scene: `…_scene-NN_Desktop.html` (16:9, 1920×1080) and `…_scene-NN_Mobile.html`
-  (4:5, 1080×1350).
+Offline, open `index.html` or any page in a browser. No build step and no server are needed.
+
+- `preview/` holds the whole film (`…_film_Desktop.html`, `…_film_Mobile.html`, 9:40) and the film scene by scene:
+  `…_scene-NN_Desktop.html` (16:9, 1920×1080) and `…_scene-NN_Mobile.html` (4:5, 1080×1350).
 - `sequences/seq-NN/` holds the single sequences each scene is made of: `film.html` (16:9) and `film-4x5.html` (4:5).
 
 Player keys: <kbd>Space</kbd> play/pause, <kbd>←</kbd>/<kbd>→</kbd> one frame, <kbd>Shift</kbd>+<kbd>←</kbd>/<kbd>→</kbd>
