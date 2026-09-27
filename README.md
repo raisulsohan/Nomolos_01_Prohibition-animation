@@ -1,7 +1,19 @@
 # Nomolos 01 · Prohibition: the animation
 
+<p align="center">
+  <a href="https://raisulsohan.github.io/Nomolos_01_Prohibition-animation/#01-Desktop"><img src="media/peek-1-delete.webp" width="49%" alt="1920: REDUCE and MANAGE are struck out, DELETE is stamped, and an eraser rubs out the blot"></a>
+  <a href="https://raisulsohan.github.io/Nomolos_01_Prohibition-animation/#09-Desktop"><img src="media/peek-2-machine.webp" width="49%" alt="Gears turning, and the camera pulls back to the Anti-Saloon League machine"></a>
+  <a href="https://raisulsohan.github.io/Nomolos_01_Prohibition-animation/#13-Desktop"><img src="media/peek-3-illegal.webp" width="49%" alt="An ILLEGAL stamp comes down on a lamp-lit street, which dissolves into America at night"></a>
+  <a href="https://raisulsohan.github.io/Nomolos_01_Prohibition-animation/#24-Desktop"><img src="media/peek-4-network.webp" width="49%" alt="A network of lights spreads over the map and becomes an octopus as the years run from 1933 to 1978"></a>
+</p>
+
+<h3 align="center"><a href="https://raisulsohan.github.io/Nomolos_01_Prohibition-animation/">▶ Watch the whole film (9:40) in your browser</a></h3>
+
+<p align="center">Click a clip to open its scene.</p>
+
 The animation of *Prohibition*, the first Nomolos documentary. Every frame is drawn in JavaScript on a canvas, and
-the repository holds no video or image files. Each frame is a pure function of time, so any moment can be drawn on its own.
+the film itself uses no video or image files. The clips above are recordings of the pages. Each frame is a pure
+function of time, so any moment can be drawn on its own.
 
 The pages play silently.
 
