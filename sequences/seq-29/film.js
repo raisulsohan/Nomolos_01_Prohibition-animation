@@ -43,19 +43,21 @@
   function governmentHand(x, t) {
     if (t < K.government - .15 || t > K.chemicals + 1.2) return;
     const [hx, hy] = handAt(t), tilt = -.95 * easeIO(clamp((t - BAR[0].t + .25) / .25)) * (1 - easeIO(clamp((t - BAR[2].t - .5) / .3)));
-    x.fillStyle = P.sleeve; x.fillRect(hx - 30, hy - 1200, 60, 1170); x.fillStyle = '#f5ecd8'; x.fillRect(hx - 32, hy - 44, 64, 18);
-    x.fillStyle = '#c8a040'; x.beginPath(); x.arc(hx + 18, hy - 35, 5, 0, TAU); x.fill();
-    x.save(); x.translate(hx, hy); x.rotate(tilt); x.scale(1.4, 1.4);
+    const J = 1.4, NECK = [4, 17], o = { h: [0, 0], side: 1, r: 43, grip: 1, skin: P.skin, s: .7, arm: -Math.PI / 2 - tilt, style: 'fingers' };
+    const wl = FILM.hand.wrist(o), jw = p => [hx + J * (Math.cos(tilt) * (NECK[0] + p[0]) - Math.sin(tilt) * (NECK[1] + p[1])), hy + J * (Math.sin(tilt) * (NECK[0] + p[0]) + Math.cos(tilt) * (NECK[1] + p[1]))];
+    const w = { p: jw(wl.p), w: wl.w * J }, top = jw([wl.p[0], -31]);
+    FILM.hand.arm(x, w, [w.p[0], hy - 1200], { sleeve: P.sleeve, cuff: '#f5ecd8', link: '#c8a040', cuffAt: Math.max(20, w.p[1] - top[1] + 8), taper: 1.15 });
+    x.save(); x.translate(hx, hy); x.rotate(tilt); x.scale(J, J);
+    x.save(); x.translate(NECK[0], NECK[1]); FILM.hand.back(x, o); x.restore();
     x.fillStyle = P.cream; x.beginPath(); x.moveTo(-50, 24); x.quadraticCurveTo(-64, 110, -30, 150); x.lineTo(40, 150); x.quadraticCurveTo(70, 110, 52, 24); x.closePath(); x.fill();
     x.fillRect(-26, 4, 60, 26); polyPath(x, [[-26, 6], [-54, -6], [-44, 16]]); x.fill();
-    x.strokeStyle = P.cream; x.lineWidth = 10; x.lineCap = 'round'; x.beginPath(); x.moveTo(30, 14); x.quadraticCurveTo(62, 10, 58, 60); x.stroke();
     x.fillStyle = GREEN; x.fillRect(-44, 96, 88, 8);
     x.fillStyle = INK; x.font = '900 20px NSC'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('U.S.', 4, 76); x.fillText("GOV'T", 4, 100);
-    x.fillStyle = P.skin; x.beginPath(); x.roundRect(-24, -30, 50, 40, 12); x.fill(); x.fillStyle = 'rgba(0,0,0,.12)'; for (let k = 0; k < 3; k++) x.fillRect(-16 + k * 13, -2, 2, 12);
+    x.translate(NECK[0], NECK[1]); FILM.hand.front(x, o);
     x.restore();
     const p = pourAt(t); if (p > 0) {
       const sp = [hx + 1.4 * (Math.cos(tilt) * -54 - Math.sin(tilt) * -6), hy + 1.4 * (Math.sin(tilt) * -54 + Math.cos(tilt) * -6)];
-      x.strokeStyle = GREEN; x.lineWidth = 12 * p; x.lineCap = 'round'; x.beginPath(); x.moveTo(sp[0], sp[1]); x.quadraticCurveTo(sp[0] - 30, sp[1] + 80, sp[0] - 34, DOCK - 220); x.stroke();
+      x.save(); x.strokeStyle = GREEN; x.lineWidth = 12 * p; x.lineCap = 'round'; x.beginPath(); x.moveTo(sp[0], sp[1]); x.quadraticCurveTo(sp[0] - 30, sp[1] + 80, sp[0] - 34, DOCK - 220); x.stroke(); x.restore();
     }
   }
 
@@ -171,7 +173,7 @@
     x.fillStyle = '#9a9aa6'; polyPath(x, [[FX - 44, 620], [FX + 44, 620], [FX + 8, 668], [FX - 8, 668]]); x.fill();
     x.fillStyle = P.cream; polyPath(x, [[FX - 54, 612], [FX + 54, 612], [FX + 40, 636], [FX - 40, 636]]); x.fill();
     x.fillStyle = FILM.rgba(FILM.hex(GREEN), .55 * smooth(pour / .3)); x.beginPath(); x.ellipse(FX, 620, 30, 6, 0, 0, TAU); x.fill();
-    if (open) { x.strokeStyle = GREEN; x.lineWidth = 7; x.lineCap = 'round'; x.beginPath(); x.moveTo(FX + 2, 598); x.lineTo(FX, 614); x.stroke(); }
+    if (open) { x.save(); x.strokeStyle = GREEN; x.lineWidth = 7; x.lineCap = 'round'; x.beginPath(); x.moveTo(FX + 2, 598); x.lineTo(FX, 614); x.stroke(); x.restore(); }
     for (let k = 0; k < 4; k++) {
       const bxk = 3090 + k * 62; x.save(); x.translate(bxk, TAB.y); greenBottle(x, 100, .25);
       const lu = back((tp - LAB[k]) / .25); if (lu > 0) { x.translate(0, -40); x.scale(lu, lu); x.fillStyle = P.card; x.fillRect(-19, -20, 38, 40); x.fillStyle = INK; x.font = '900 10px NSC'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('FINE OLD', 0, -9); x.fillText('RYE', 0, 4); x.fillStyle = P.amber; x.fillRect(-13, 12, 26, 3); }

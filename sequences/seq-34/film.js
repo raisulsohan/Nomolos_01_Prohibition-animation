@@ -56,15 +56,15 @@
   const J = [960, 1260], TRUNK = [[960, 230], [960, J[1]]], LBR = [J, [880, 1320], [520, 1320], [520, 1600]], RBR = [J, [1040, 1320], [1400, 1320], [1400, 1640]];
   const VL = [760, 1320], VR = [1160, 1320];
   const flowT = t => clamp((t - K.all - .1) / 2.1), flowL = t => clamp((t - K.legal + .75) / .9), flowR = t => clamp((t - K.illegal + .55) / .8);
-  const shutL = t => easeIO(clamp((t - K.prohibition - .45) / .5)), shutR = t => easeIO(clamp((t - K.prohibition - .95) / .5));
-  const burst = t => clamp((t - K.actually - .2) / .5), bulge = t => smooth((t - K.prohibition - 1.2) / .8) * (1 - smooth((t - K.actually - .15) / .3));
+  const shutL = t => easeIO(clamp((t - K.prohibition - .45) / .5)), shutR = t => easeIO(clamp((t - K.prohibition - 1.15) / .5));
+  const burst = t => clamp((t - K.actually - .2) / .5), bulge = t => smooth((t - K.prohibition - 1.4) / .8) * (1 - smooth((t - K.actually - .15) / .3));
   function pipe(x, pts, u, flow, tp, laid = 1) {
     if (laid <= 0) return; const lp = upto(pts, laid); stroke(x, lp, 30, INK); stroke(x, lp, 20, '#e6d9bb');
     if (u > 0) { const q = upto(pts, u); stroke(x, q, 12, AMB); if (flow > 0) { x.save(); x.setLineDash([12, 20]); x.lineDashOffset = -tp * 160; x.globalAlpha = flow; stroke(x, q, 5, '#f6cf7e'); x.restore(); } }
   }
   function valve(x, p, shut, gone, tp) {
     if (gone >= 1) return; const fly = gone > 0 ? gone : 0;
-    x.save(); x.translate(p[0] + 260 * fly, p[1] - 44 - 420 * fly + 600 * fly * fly); x.rotate(shut * Math.PI * 1.5 + fly * 9);
+    x.save(); x.translate(p[0] + 260 * fly, p[1] - 44 - 420 * fly + 600 * fly * fly); x.rotate(shut * Math.PI / 2 + fly * 9);
     x.strokeStyle = '#8a3a2a'; x.lineWidth = 9; x.beginPath(); x.arc(0, 0, 34, 0, TAU); x.stroke();
     for (let k = 0; k < 4; k++) { const a = k * Math.PI / 2; x.beginPath(); x.moveTo(0, 0); x.lineTo(34 * Math.cos(a), 34 * Math.sin(a)); x.stroke(); }
     x.restore();
@@ -82,10 +82,12 @@
   }
   function lawHand(x, t) {
     const inU = easeOut(clamp((t - K.prohibition + .1) / .5)), outU = easeIO(clamp((t - K.actually - .4) / .6)); if (inU <= 0 || outU >= 1) return;
-    const tgt = t < K.prohibition + .75 ? VL : VR, hx = lerp(1250, tgt[0], inU) + 700 * outU, hy = lerp(600, tgt[1] - 70, inU) - 900 * outU;
-    x.fillStyle = '#35516b'; x.fillRect(hx - 34, hy - 1400, 68, 1340); x.fillStyle = '#f5ecd8'; x.fillRect(hx - 36, hy - 70, 72, 20);
-    x.fillStyle = '#c8a040'; x.beginPath(); x.arc(hx + 20, hy - 60, 6, 0, TAU); x.fill();
-    x.fillStyle = P.skin; x.beginPath(); x.roundRect(hx - 30, hy - 52, 60, 50, 16); x.fill();
+    const mv = easeIO(clamp((t - K.prohibition - .95) / .2)), shut = mv < .5 ? shutL(t) : shutR(t), wheel = [lerp(VL[0], VR[0], mv), VL[1] - 44];
+    const th = -Math.PI / 2 - .45 + shut * Math.PI / 2, rim = [wheel[0] + 34 * Math.cos(th), wheel[1] + 34 * Math.sin(th)];
+    const h = [lerp(1250, rim[0], inU) + 700 * outU, lerp(600, rim[1], inU) - 900 * outU], turn = -Math.PI / 2 + shut * Math.PI / 2;
+    const o = { h, side: 1, r: 10, grip: 1, skin: P.skin, s: .8, arm: -Math.PI / 2, style: 'fingers' }, w = FILM.hand.wristAt(o, turn);
+    FILM.hand.arm(x, w, [w.p[0], h[1] - 1400], { sleeve: '#35516b', cuff: '#f5ecd8', link: '#c8a040', cuffAt: 40, taper: 1.15 });
+    FILM.hand.turned(x, o, turn, o2 => { FILM.hand.back(x, o2); FILM.hand.front(x, o2); });
   }
 
   const TOP = 1290, GROUND = 2000;

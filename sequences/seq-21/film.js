@@ -52,7 +52,7 @@
     const col = FILM.hex('#f5ecd8').map((c, i) => Math.round(lerp(c, FILM.hex('#d4a84a')[i], gold)));
     ctx.fillStyle = FILM.rgba(col, 1); ctx.font = `900 ${M45 ? 116 : 120}px NSC`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(txt, cx, cy - 22);
     const yr = smooth((t - K.year + .05) / .3); if (yr > 0) { ctx.globalAlpha = a * yr; ctx.font = '600 38px NS'; ctx.fillText('A YEAR', cx, cy + 66); }
-    const st = clamp((t - K.money + .1) / .15);
+    const st = clamp((t - K.twenties + .1) / .15);
     if (st > 0) {
       ctx.globalAlpha = 1; ctx.translate(cx, cy + h / 2 + 62); ctx.rotate(-.05); ctx.scale(lerp(1.6, 1, easeIn(st, 2)), lerp(1.6, 1, easeIn(st, 2)));
       ctx.fillStyle = 'rgba(8,12,22,.75)'; ctx.fillRect(-230, -40, 460, 80); ctx.strokeStyle = '#d4a84a'; ctx.lineWidth = 5; ctx.strokeRect(-222, -32, 444, 64); ctx.fillStyle = '#d4a84a'; ctx.font = '900 48px NSC'; ctx.fillText('IN 1920s MONEY', 0, 3);

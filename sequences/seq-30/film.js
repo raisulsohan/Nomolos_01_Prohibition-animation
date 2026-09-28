@@ -57,19 +57,25 @@
       x.restore();
     }
   }
-  function shield(x, t) {
+  const RIM = [143, 12];
+  function hand(x, cam, cy, pass) {
+    const h = [SH[0] + RIM[0] - 14, cy + RIM[1]];
+    const ELBOW = [h[0] + 70, cam.y + H / (2 * cam.z) + 160];
+    const o = { h, side: 1, r: 12, grip: 1, skin: '#d8b08a', s: 1.2, arm: Math.atan2(ELBOW[1] - h[1], ELBOW[0] - h[0]), style: 'fingers' };
+    if (pass === 'front') { FILM.hand.front(x, o); return; }
+    FILM.hand.arm(x, FILM.hand.wrist(o), ELBOW, { sleeve: '#2a2f52', cuff: '#e8e4ec', link: '#c8a040' });
+    FILM.hand.back(x, o);
+  }
+  function shield(x, t, cam) {
     const u = rise(t); if (u <= 0) return; const cy = lerp(1100, SH[1], u);
-    const grip = [SH[0] + 148, cy + 50];
-    x.strokeStyle = '#2a2f52'; x.lineWidth = 92; x.lineCap = 'butt'; x.beginPath(); x.moveTo(1460, cy + 900); x.lineTo(grip[0] + 30, grip[1] + 80); x.stroke();
-    x.save(); x.translate(grip[0] + 34, grip[1] + 86); x.rotate(Math.atan2(-(grip[1] + 80 - cy - 900), grip[0] + 30 - 1460) + Math.PI / 2);
-    x.fillStyle = '#e8e4ec'; x.fillRect(-48, -10, 96, 28); x.fillStyle = '#c8a040'; x.beginPath(); x.arc(26, 4, 8, 0, TAU); x.fill(); x.restore();
+    hand(x, cam, cy, 'back');
     x.save(); x.translate(SH[0], cy); x.scale(1.25, 1.25);
     const g = x.createLinearGradient(0, -150, 0, 150); g.addColorStop(0, '#8c8aa6'); g.addColorStop(1, '#e6dccb');
     x.fillStyle = g; shieldPath(x, 1); x.fill(); x.fillStyle = '#3a3860'; shieldPath(x, .88); x.fill(); x.fillStyle = g; shieldPath(x, .8); x.fill();
     x.fillStyle = '#1a1830'; x.font = '900 52px NSC'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('PROTECT', 0, -62);
     x.fillStyle = '#3a3860'; x.beginPath(); for (let k = 0; k < 10; k++) { const a = -Math.PI / 2 + k * Math.PI / 5, r = k % 2 ? 16 : 38; x.lineTo(r * Math.cos(a), 20 + r * Math.sin(a)); } x.fill();
     x.restore();
-    x.fillStyle = '#d8b08a'; for (let k = 0; k < 4; k++) { x.beginPath(); x.roundRect(grip[0] - 12, grip[1] - 44 + k * 26, 36, 22, 10); x.fill(); }
+    hand(x, cam, cy, 'front');
   }
 
   const KEYS = [[0, [960, 760, 1.05]], [K.died + .3, [960, 760, 1.05]], [K.ten - .3, [960, 740, .95]], [K.policy - .1, [960, 720, .95]], [K.protect + .2, [960, 380, 1.0]],
@@ -85,7 +91,7 @@
   function draw(ctx, t) {
     const tp = pose(t), cam = camera(t), lf = litFrac(t);
     L.background(ctx);
-    L.sheet(ctx, cam, 1, R, x => { wall(x, t); candles(x, t, tp); shield(x, t); }, { glow: .45, glowBlur: 12 });
+    L.sheet(ctx, cam, 1, R, x => { wall(x, t); candles(x, t, tp); shield(x, t, cam); }, { glow: .45, glowBlur: 12 });
     FILM.sheet(ctx, cam, 1, W, H, R);
     PR.glow(ctx, 960, 900, 1300, '#ffb870', .35 * lf * smooth(t / .4), 'lightbox');
     PR.glow(ctx, 960, 760, 520, '#ffcf80', .3 * rise(t), 'lightbox');

@@ -62,7 +62,7 @@
     }
     x.fillStyle = '#5a5a64'; x.fillRect(JAR[0] + 10, lerp(CH[0] - 70, CH[0] - 2, tn), 16, 70);
     x.fillStyle = '#6a6a74'; x.fillRect(JAR[0] - 40, JAR[1] + 40, 24, CH[0] - JAR[1] - 40);
-    x.save(); x.translate(JAR[0] + 18, CH[0] - 92); x.rotate(tn * Math.PI * 2); x.strokeStyle = '#8a3a2a'; x.lineWidth = 8; x.beginPath(); x.arc(0, 0, 26, 0, TAU); x.stroke(); x.beginPath(); x.moveTo(-26, 0); x.lineTo(26, 0); x.moveTo(0, -26); x.lineTo(0, 26); x.stroke(); x.restore();
+    x.save(); x.translate(JAR[0] + 18, CH[0] - 92); x.rotate(tn * Math.PI / 3); x.strokeStyle = '#8a3a2a'; x.lineWidth = 8; x.beginPath(); x.arc(0, 0, 26, 0, TAU); x.stroke(); x.beginPath(); x.moveTo(-26, 0); x.lineTo(26, 0); x.moveTo(0, -26); x.lineTo(0, 26); x.stroke(); x.restore();
     if (tn > .5) { const g2 = rng(37); for (let k = 0; k < 8; k++) { const u = ((tp * 1.4 + g2()) % 1); x.fillStyle = GREEN; x.fillRect(JAR[0] - 38, CH[0] - 20 - u * (CH[0] - JAR[1] - 20), 20, 12); } }
   }
   function jar(x, t) {
@@ -88,11 +88,12 @@
   }
   function hand(x, t) {
     const inU = easeOut(clamp((t - K.bringing + .15) / .45)), outU = easeIO(clamp((t - K.back - .5) / .6)); if (inU <= 0 || outU >= 1) return;
-    const wheel = [JAR[0] + 18, CH[0] - 92], a = turn(t) * TAU, grip = [wheel[0] + 26 * Math.cos(a - 1), wheel[1] + 26 * Math.sin(a - 1)];
-    const hx = lerp(2200, grip[0], inU) + 900 * outU, hy = lerp(420, grip[1], inU) - 500 * outU, far = [hx + 1100, hy - 520];
-    x.strokeStyle = '#35516b'; x.lineWidth = 62; x.lineCap = 'butt'; x.beginPath(); x.moveTo(far[0], far[1]); x.lineTo(hx + 44, hy - 21); x.stroke();
-    x.save(); x.translate(hx + 40, hy - 19); x.rotate(Math.atan2(far[1] - hy, far[0] - hx) + Math.PI / 2); x.fillStyle = '#f5ecd8'; x.fillRect(-33, -8, 66, 18); x.fillStyle = '#c8a040'; x.beginPath(); x.arc(18, 1, 5, 0, TAU); x.fill(); x.restore();
-    x.fillStyle = P.skin; x.beginPath(); x.roundRect(hx - 22, hy - 20, 48, 40, 14); x.fill();
+    const wheel = [JAR[0] + 18, CH[0] - 92], tn = turn(t), th = -.35 + tn * Math.PI / 3, rim = [wheel[0] + 26 * Math.cos(th), wheel[1] + 26 * Math.sin(th)];
+    const cam = camera(t), below = cam.y + H / (2 * cam.z);
+    const h = [lerp(rim[0] + 120, rim[0], inU) + 200 * outU, lerp(below + 260, rim[1], inU) + 700 * outU], rot = tn * Math.PI / 3, elbow = [h[0] + 60, below + 200];
+    const o = { h, side: 1, r: 10, grip: 1, skin: P.skin, s: .8, arm: Math.atan2(elbow[1] - h[1], elbow[0] - h[0]), style: 'fingers' }, w = FILM.hand.wristAt(o, rot);
+    FILM.hand.arm(x, w, elbow, { sleeve: '#35516b', cuff: '#f5ecd8', link: '#c8a040' });
+    FILM.hand.turned(x, o, rot, o2 => { FILM.hand.back(x, o2); FILM.hand.front(x, o2); });
   }
 
   const KEYS = [[0, [420, 420, 1.55]], [K.enough + .5, [440, 420, 1.5]], [K.depression + .8, [1500, 560, .8]], [K.pouring - .2, [1700, 580, .85]], [K.budgets, [1950, 600, .9]],

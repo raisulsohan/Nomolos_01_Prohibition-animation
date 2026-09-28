@@ -67,18 +67,37 @@
     });
     for (let j = 0; j < 2; j++) { const nx = lerp(mouth[0] - 300, mouth[0] - 64 - j * 30, u), ny = mouth[1] + 50 + j * 18; x.save(); x.translate(nx, ny); x.scale(k, k); x.fillStyle = '#f6ecd5'; x.fillRect(-40, -50, 80, 100); x.strokeStyle = 'rgba(44,40,36,.4)'; x.lineWidth = 2; for (let r = 0; r < 6; r++) { x.beginPath(); x.moveTo(-30, -36 + r * 14); x.lineTo(30, -36 + r * 14); x.stroke(); } x.fillStyle = P.skin; x.beginPath(); x.ellipse(-44, 30, 16, 12, 0, 0, TAU); x.fill(); x.restore(); }
   }
-  const PAPERS = [['THE DAILY NEWS', -1, K.celebrity - .35], ['EVENING HERALD', 0, K.celebrity - .15], ['THE MORNING POST', 1, K.celebrity + .05]];
+  const PAPERS = [['THE DAILY NEWS', -1, K.celebrity - .35, '#efe6d2'], ['EVENING HERALD', 0, K.celebrity - .15, '#f4eee0'], ['THE MORNING POST', 1, K.celebrity + .05, '#e8dec6']];
+  const lines = (ctx, x, y, w, n, short = 5) => { ctx.fillStyle = 'rgba(44,40,36,.55)'; for (let r = 0; r < n; r++) ctx.fillRect(x, y + r * 17, r % short === short - 1 ? w * .62 : w, 6); };
+  const photo = (ctx, x, y, w, h, tint, fig) => { ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip(); ctx.fillStyle = tint; ctx.fillRect(x, y, w, h); fig(); ctx.restore(); ctx.strokeStyle = '#2c2824'; ctx.lineWidth = 2; ctx.strokeRect(x, y, w, h); };
+  const FRONT = [
+    (ctx, name) => {
+      ctx.fillStyle = '#2c2824'; ctx.fillRect(-210, -270, 420, 56); ctx.fillStyle = '#efe6d2'; ctx.font = '900 30px NSC'; ctx.fillText(name, 0, -242);
+      ctx.fillStyle = '#2c2824'; ctx.font = '900 108px NSC'; ctx.fillText('CAPONE', 0, -150);
+      photo(ctx, -190, -84, 380, 210, '#d8ccb4', () => { ctx.translate(20, 150); ctx.scale(2.9, 2.9); PR.caponeLit(ctx, P, { grin: .6, ember: .8 }); });
+      lines(ctx, -190, 144, 380, 7, 4);
+    },
+    (ctx, name) => {
+      ctx.fillStyle = '#2c2824'; ctx.font = '600 38px NS'; ctx.fillText(name, 0, -238); ctx.fillRect(-190, -262, 380, 2); ctx.fillRect(-190, -214, 380, 2); ctx.fillRect(-190, -208, 380, 1);
+      ctx.font = '900 88px NSC'; ctx.fillText('CAPONE', 0, -152);
+      photo(ctx, 10, -100, 180, 220, '#d4c8ae', () => { ctx.translate(136, 228); ctx.scale(4, 4); PR.caponeLit(ctx, P, { grin: .5, ember: .9 }); });
+      lines(ctx, -190, -96, 180, 13, 4); lines(ctx, -190, 140, 380, 7, 3);
+    },
+    (ctx, name) => {
+      ctx.strokeStyle = '#2c2824'; ctx.lineWidth = 3; ctx.strokeRect(-190, -258, 380, 50); ctx.fillStyle = '#2c2824'; ctx.font = '900 32px NSC'; ctx.fillText(name, 0, -233);
+      ctx.save(); ctx.letterSpacing = '8px'; ctx.font = '600 76px NS'; ctx.fillText('CAPONE', 4, -150); ctx.restore();
+      photo(ctx, -190, -100, 190, 250, '#dccfb6', () => { ctx.translate(-95, 110); ctx.scale(-2.5, 2.5); PR.caponeLit(ctx, P, { grin: .9, ember: .8 }); });
+      lines(ctx, 20, -96, 170, 14, 4); lines(ctx, -190, 166, 380, 5, 3);
+    },
+  ];
   function papers(ctx, t) {
     const out = smooth((t - K.gave + .25) / .3); if (out >= 1) return;
-    PAPERS.forEach(([name, d, t0]) => {
+    PAPERS.forEach(([name, d, t0, tint], i) => {
       const u = easeOut(clamp((t - t0) / .45), 3); if (u <= 0) return;
       ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.translate(W / 2 + d * (M45 ? 240 : 420) + out * d * 900, H / 2 + (M45 ? d * 180 : 0) - out * 900); ctx.rotate((1 - u) * 8 + d * .08); ctx.scale(u * (M45 ? .95 : 1), u * (M45 ? .95 : 1));
-      ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(-206, -266, 420, 540); ctx.fillStyle = '#efe6d2'; ctx.fillRect(-210, -270, 420, 540);
-      ctx.fillStyle = '#2c2824'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = '900 34px NSC'; ctx.fillText(name, 0, -232); ctx.fillRect(-190, -210, 380, 4);
-      ctx.font = '900 86px NSC'; ctx.fillText('CAPONE', 0, -150);
-      ctx.save(); ctx.beginPath(); ctx.rect(-190, -100, 200, 240); ctx.clip(); ctx.fillStyle = '#d8ccb4'; ctx.fillRect(-190, -100, 200, 240); ctx.translate(-80, 150); ctx.scale(2.6, 2.6); PR.caponeLit(ctx, P, { grin: .6 }); ctx.restore();
-      ctx.fillStyle = 'rgba(44,40,36,.55)'; for (let r = 0; r < 14; r++) ctx.fillRect(30, -96 + r * 17, r % 5 === 4 ? 100 : 160, 6); for (let r = 0; r < 6; r++) ctx.fillRect(-190, 160 + r * 17, r % 3 === 2 ? 240 : 380, 6);
+      ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(-206, -266, 420, 540); ctx.fillStyle = tint; ctx.fillRect(-210, -270, 420, 540);
+      ctx.fillStyle = '#2c2824'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; FRONT[i](ctx, name);
       ctx.restore();
     });
   }

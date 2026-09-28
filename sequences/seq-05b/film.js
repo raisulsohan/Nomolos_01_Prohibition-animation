@@ -9,7 +9,7 @@
   const K = { story: 0.534, how: 1.035, war: 1.368, created: 2.203, al: 2.737, capone: 2.937 };
   K.raise = [K.story - .2, K.how - .1]; K.out = [K.how - .05, K.war]; K.breath = K.war + .05; K.back = [K.created + .15, K.al + .02];
   K.draw = K.capone + .1; K.lower = [K.al + .2, K.al + .75];
-  const REST = [-30, 16], GRIP = [-22.9, -47.1], AWAY = [-34, -37];
+  const REST = [-30, 16], GRIP = [PR.CAPONE_CIGAR[0][0] - 7.5, PR.CAPONE_CIGAR[0][1] + 2.6], AWAY = [-34, -37];
   const WORDS = [['HOW', 1.035], ['A', 1.202], ['WAR', 1.368], ['ON', 1.602], ['ALCOHOL', 1.736]];
 
   const T1 = 1.9;
@@ -55,10 +55,10 @@
       else if (tp < K.lower[0]) hand = GRIP;
       else hand = mv(GRIP, REST, easeIO((tp - K.lower[0]) / (K.lower[1] - K.lower[0])));
     }
-    const puff = Math.exp(-(((t - K.draw - .15) / .28) ** 2)), ember = .6 + .4 * Math.max(puff, smooth((t - K.draw) / .4) * .4), face = .25 + .75 * Math.max(puff, smooth((t - K.draw) / .5) * .45);
+    const puff = Math.exp(-(((t - K.draw - .15) / .28) ** 2)), ember = .6 + .4 * Math.max(puff, smooth((t - K.draw) / .4) * .4), face = .25 * smooth(t / .4) + .75 * Math.max(puff, smooth((t - K.draw) / .5) * .45);
     S5.city(ctx, T, true, cam, { ember, face, hand, holding, exhale: T0 + K.breath, puff });
     title(ctx, t);
-    LB.grade(ctx, t);
+    LB.grade(ctx, T0 + t);
   }
 
   const ready = FILM.fonts('NSC');

@@ -11,7 +11,8 @@
   const PIPE_Y = 1400, VALVE = [-350, 1285];
   const line = (x, pts, w, col) => { x.strokeStyle = col; x.lineWidth = w; x.lineCap = 'butt'; x.beginPath(); x.moveTo(pts[0][0], pts[0][1]); for (const p of pts.slice(1)) x.lineTo(p[0], p[1]); x.stroke(); };
   const cashAt = t => smooth((t - TURN + .1) / .3);
-  function under(x, t, tp) {
+  const wheel = t => 1.2 * easeIO(clamp((t - TURN + .5) / .6));
+  function under(x, t, tp, cam) {
     x.fillStyle = '#140f22'; x.fillRect(-1600, 1060, 3800, 1000);
     x.fillStyle = 'rgba(60,56,140,.25)'; for (let k = 0; k < 6; k++) x.fillRect(-1600, 1120 + k * 130, 3800, 18);
     x.fillStyle = '#3a2418'; x.fillRect(-1600, 1000, 3800, 60);
@@ -32,22 +33,32 @@
       }
     }
     x.fillStyle = '#6a5a3a'; x.fillRect(VALVE[0] - 26, PIPE_Y - 70, 52, 40); x.fillRect(VALVE[0] - 8, VALVE[1], 16, PIPE_Y - 70 - VALVE[1]);
-    const a = 1.2 * easeIO(clamp((t - TURN + .5) / .6));
+    const a = wheel(t);
     x.save(); x.translate(VALVE[0], VALVE[1]); x.rotate(a); x.strokeStyle = '#c8a050'; x.lineWidth = 14; x.beginPath(); x.arc(0, 0, 70, 0, TAU); x.stroke();
     x.lineWidth = 9; for (let k = 0; k < 4; k++) { x.beginPath(); x.moveTo(0, 0); x.lineTo(Math.cos(k * Math.PI / 2) * 68, Math.sin(k * Math.PI / 2) * 68); x.stroke(); }
     x.fillStyle = '#a8842f'; x.beginPath(); x.arc(0, 0, 14, 0, TAU); x.fill(); x.restore();
-    hand(x, t, tp);
+    hand(x, t, tp, cam);
   }
-  const ELBOW = [380, 1760], RIM = [VALVE[0] + 70, VALVE[1]];
-  function hand(x, t, tp) {
+  const RIM_R = 70;
+  const elbowAt = cam => [(cam.x + W / (2 * cam.z) - RX) / RS + 140, (cam.y + H / (2 * cam.z) - RY) / RS + 140];
+  function hand(x, t, tp, cam) {
     const a = easeOut(clamp((tp - K.whoever - .1) / .7), 2); if (a <= 0) return;
-    const h = [lerp(300, RIM[0], a), lerp(1650, RIM[1], a)];
-    const o = { h, side: 1, r: 7, grip: .15 + .85 * smooth((tp - K.whoever - .7) / .3), skin: '#caa07a', s: .75, arm: Math.atan2(ELBOW[1] - h[1], ELBOW[0] - h[0]), style: 'fingers' };
-    const w = FILM.hand.wrist(o), dx = w.p[0] - ELBOW[0], dy = w.p[1] - ELBOW[1], n = Math.hypot(dx, dy), nx = -dy / n, ny = dx / n, hw = w.w / 2;
+    const out = easeIn(clamp((tp - TURN - .3) / .45), 2); if (out >= 1) return;
+    const rot = wheel(t), rim = [VALVE[0] + RIM_R * Math.cos(rot), VALVE[1] + RIM_R * Math.sin(rot)];
+    const ELBOW = elbowAt(cam), d = [ELBOW[0] - rim[0], ELBOW[1] - rim[1]], n0 = Math.hypot(d[0], d[1]);
+    const from = [ELBOW[0] + d[0] / n0 * 220, ELBOW[1] + d[1] / n0 * 220];
+    let h = [lerp(from[0], rim[0], a), lerp(from[1], rim[1], a)], turn = rot;
+    if (out > 0) { h = [lerp(rim[0], from[0], out), lerp(rim[1], from[1], out)]; turn = rot * (1 - out); }
+    const open = smooth((tp - TURN - .15) / .15), grip = lerp(.15 + .85 * smooth((tp - K.whoever - .7) / .3), .5, open);
+    const armW = Math.atan2(ELBOW[1] - h[1], ELBOW[0] - h[0]);
+    const o = { h, side: 1, r: 7, grip, skin: '#caa07a', s: .75, arm: armW - turn, style: 'fingers' };
+    const w0 = FILM.hand.wrist(o), cs = Math.cos(turn), sn = Math.sin(turn), rx = w0.p[0] - h[0], ry = w0.p[1] - h[1];
+    const w = { p: [h[0] + rx * cs - ry * sn, h[1] + rx * sn + ry * cs], w: w0.w };
+    const dx = w.p[0] - ELBOW[0], dy = w.p[1] - ELBOW[1], n = Math.hypot(dx, dy), nx = -dy / n, ny = dx / n, hw = w.w / 2;
     x.fillStyle = '#0c0b1a'; x.beginPath(); x.moveTo(ELBOW[0] + nx * hw * 2.4, ELBOW[1] + ny * hw * 2.4); x.lineTo(w.p[0] + nx * hw * 1.3, w.p[1] + ny * hw * 1.3); x.lineTo(w.p[0] - nx * hw * 1.3, w.p[1] - ny * hw * 1.3); x.lineTo(ELBOW[0] - nx * hw * 2.4, ELBOW[1] - ny * hw * 2.4); x.fill();
     const cf = [w.p[0] - dx / n * 26, w.p[1] - dy / n * 26];
     x.fillStyle = '#f0e8d6'; x.beginPath(); x.arc(cf[0], cf[1], hw * 1.25, 0, TAU); x.fill(); x.fillStyle = '#e8c35a'; x.beginPath(); x.arc(cf[0], cf[1], 5, 0, TAU); x.fill();
-    FILM.hand.back(x, o); FILM.hand.front(x, o);
+    x.save(); x.translate(h[0], h[1]); x.rotate(turn); x.translate(-h[0], -h[1]); FILM.hand.back(x, o); FILM.hand.front(x, o); x.restore();
   }
   function glows(ctx, t) {
     const at = (lx, ly) => [RX + lx * RS, RY + ly * RS];
@@ -57,7 +68,8 @@
 
   const IN = (lx, ly, z) => [RX + lx * RS, RY + ly * RS, Math.log(z * (M45 ? .8 : 1) / RS)];
   const V0 = (() => { const c = S18.camera(T0); return [c.x, c.y, Math.log(c.z)]; })();
-  const KEYS = [[0, V0], [K.supply - .1, IN(-340, 1330, 1.45)], [TURN + .2, IN(-250, 1350, 1.4)], [DUR, IN(300, 1390, 1.15)]];
+  const TIGHT = IN(-420, 1255, 2.4);
+  const KEYS = [[0, V0], [K.supply - .1, TIGHT], [TURN + .3, TIGHT], [DUR, IN(300, 1390, 1.15)]];
   function camera(t) {
     const own = keyed(t, KEYS), c = S18.camera(T0 + t), s = [c.x, c.y, Math.log(c.z)], w = smooth(t / .5);
     const v = own.map((o, i) => lerp(s[i], o, w));
@@ -66,7 +78,7 @@
   function draw(ctx, t) {
     const cam = camera(t), tp = pose(t);
     S18.draw(ctx, T0 + t, cam, t <= 0 ? undefined : (ctx, c) => {
-      L.sheet(ctx, c, 1, R, x => { x.translate(RX, RY); x.scale(RS, RS); under(x, t, tp); }, { glow: .3, glowBlur: 12 });
+      L.sheet(ctx, c, 1, R, x => { x.translate(RX, RY); x.scale(RS, RS); under(x, t, tp, c); }, { glow: .3, glowBlur: 12 });
       FILM.sheet(ctx, c, 1, W, H, R); glows(ctx, t);
     });
   }

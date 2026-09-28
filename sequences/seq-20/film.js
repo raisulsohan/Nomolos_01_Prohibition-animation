@@ -6,7 +6,7 @@
   const L = FILM.look('lightbox', W, H), B = L.P, pose = L.pose;
   const K = { face: 0.267, al: 1.268, capone: 1.502 };
   const back = u => { if (u <= 0) return 0; u = clamp(u) - 1; return 1 + u * u * (2.7 * u + 1.7); };
-  const AT = M45 ? [620, 1180] : [780, 1010], S = M45 ? 9.5 : 9.2;
+  const AT = M45 ? [620, 1180] : [760, 1010], S = M45 ? 9.5 : 9.2;
   const lit = t => smooth((t - K.face) / .8);
   function scene(x, t, tp) {
     x.fillStyle = '#0e0c28'; x.fillRect(-500, -500, 3000, 2500);
@@ -19,8 +19,8 @@
   function title(ctx, t) {
     const u = back((t - K.al + .02) / .3); if (u <= 0) return;
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.translate(M45 ? W / 2 : 1440, M45 ? 170 : H / 2 - 20); ctx.scale(u, u); ctx.globalAlpha = clamp(u * 2);
-    ctx.font = `900 ${M45 ? 110 : 120}px NSC`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.translate(M45 ? W / 2 : 1505, M45 ? 170 : H / 2 - 20); ctx.scale(u, u); ctx.globalAlpha = clamp(u * 2);
+    ctx.font = `900 ${M45 ? 110 : 110}px NSC`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.shadowColor = 'rgba(255,174,74,.5)'; ctx.shadowBlur = 30; ctx.fillStyle = '#ffe3b0'; ctx.fillText('AL CAPONE', 0, 0); ctx.restore();
   }
   const cam = t => ({ x: M45 ? 560 : 900, y: M45 ? 700 : 560, z: (M45 ? 1 : 1) * (1 + .05 * smooth(t / DUR)) });
