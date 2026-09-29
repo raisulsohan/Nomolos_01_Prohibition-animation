@@ -11,9 +11,11 @@
 
 <p align="center">Click a clip to open its scene.</p>
 
-The animation of *Prohibition*, the first Nomolos documentary. Every frame is drawn in JavaScript on a canvas, and
-the film itself uses no video or image files. The clips above are recordings of the pages. Each frame is a pure
-function of time, so any moment can be drawn on its own.
+<p align="center">
+  <strong>An animated documentary film created, written, directed, and animated by <a href="https://raisulsohan.com">Raisul Sohan</a></strong>
+</p>
+
+The animation of *Prohibition*, the first Nomolos documentary, conceived, written, and animated by **[Raisul Sohan](https://raisulsohan.com)**. Every frame is mathematically composed and drawn in JavaScript on an HTML5 canvas using his own procedural drawing code, and the film itself uses zero video or image files. The clips above are recordings of the pages. Each frame is a pure function of time, so any moment can be drawn on its own.
 
 The pages play silently.
 
@@ -39,6 +41,12 @@ one second, <kbd>Home</kbd> back to the start, <kbd>F</kbd> fullscreen. Add `?t=
 | `sequences/seq-NN/film.js` | the drawing code of one sequence, in both formats |
 | `sequences/seq-NN/timing.js` | the sequence's length and the start and end of each of its shots |
 | `fonts/` | Noto Sans SemiBold and Noto Sans Condensed Black |
+
+## Author & Credits
+
+- **Creator, Animator & Director:** [Raisul Sohan](https://raisulsohan.com) ([@raisulsohan](https://github.com/raisulsohan))
+- **Production:** Nomolos Documentaries (Episode 01)
+- **Animation & Engine:** Handcrafted by Raisul Sohan using procedural vector mathematics and HTML5 Canvas 2D drawing code.
 
 ## License
 
