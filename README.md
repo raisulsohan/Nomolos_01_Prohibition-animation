@@ -12,41 +12,53 @@
 <p align="center">Click a clip to open its scene.</p>
 
 <p align="center">
-  <strong>An animated documentary film created, written, directed, and animated by <a href="https://raisulsohan.com">Raisul Sohan</a></strong>
+  <strong>An animated documentary film conceived, illustrated, animated in Adobe After Effects, and sound-composed by <a href="https://raisulsohan.com">Raisul Sohan</a></strong>
 </p>
 
-The animation of *Prohibition*, the first Nomolos documentary, conceived, written, and animated by **[Raisul Sohan](https://raisulsohan.com)**. Every frame is mathematically composed and drawn in JavaScript on an HTML5 canvas using his own procedural drawing code, and the film itself uses zero video or image files. The clips above are recordings of the pages. Each frame is a pure function of time, so any moment can be drawn on its own.
+---
 
-The pages play silently.
+## Production & Craft
+
+*Prohibition* is the inaugural animated documentary film in the **Nomolos** series, independently created, directed, illustrated, and animated by **[Raisul Sohan](https://raisulsohan.com)**.
+
+### 1. Adobe After Effects Animation & Compositing
+The entire 9-minute 40-second production was animated and composited inside **Adobe After Effects**. Every scene utilizes virtual multiplane camera setups, meticulous graph editor velocity curves, and precise spatial keyframing—steering clear of generic pre-made animation templates to produce authentic, bespoke character and environmental motion.
+
+### 2. Handcrafted Vector Illustrations
+Every visual asset—from 1920s speakeasy bars, vintage bootlegging trucks, and cobblestone alleyways to historical silhouettes, period cartography, and industrial machinery—was illustrated from scratch. Each artwork was designed in modular, motion-ready vector layers (silhouettes, props, shadows, lighting overlays) specifically tailored for multi-layered animation rigging.
+
+### 3. Special 3D Parallax Vibe & Spatial Depth
+Rather than settling for flat 2D visuals, every scene is structured across multiplane 2.5D and 3D space in After Effects. Virtual wide-angle cameras glide past layered foreground silhouettes, midground story action, and distant horizons—creating an immersive, dynamic **parallax depth** accompanied by organic depth-of-field focus shifts and subtle camera drifts.
+
+### 4. Atmospheric Glow & Period Lighting
+To establish the moody tension of the Prohibition era, the visuals are treated with multi-pass atmospheric glows (Deep Glow), volumetric light falloffs from vintage streetlamps and neon signs, and textured color grading that gives each frame a graphic novel documentary aesthetic.
+
+### 5. Curated Sound Design & Original Soundtrack Composition
+With zero budget for expensive commercial audio libraries, every sound effect (**SFX**), ambient background noise, foley detail (glass clinking, engine revs, footsteps in rain, police whistles), and musical score (**BGM / Underscore**) was researched and collected from free public domain and open-source audio archives. Raisul Sohan individually edited, time-stretched, equalized, and layered these soundscapes—scoring every beat to synchronize frame-by-frame with the on-screen visual drama.
+
+---
 
 ## Watch
 
-**Online: https://raisulsohan.github.io/Nomolos_01_Prohibition-animation/**. Play the whole film or any scene, in 16:9 or
-4:5.
+**Online: https://raisulsohan.github.io/Nomolos_01_Prohibition-animation/**. Play the whole film or any scene, in 16:9 widescreen or 4:5 mobile.
 
-Offline, open `index.html` or any page in a browser. No build step and no server are needed.
+Offline, open `index.html` or any scene in a browser.
 
 - `preview/` holds the whole film (`…_film_Desktop.html`, `…_film_Mobile.html`, 9:40) and the film scene by scene:
   `…_scene-NN_Desktop.html` (16:9, 1920×1080) and `…_scene-NN_Mobile.html` (4:5, 1080×1350).
-- `sequences/seq-NN/` holds the single sequences each scene is made of: `film.html` (16:9) and `film-4x5.html` (4:5).
+- `sequences/seq-NN/` holds the individual sequences each scene is composed of: `film.html` (16:9) and `film-4x5.html` (4:5).
 
-Player keys: <kbd>Space</kbd> play/pause, <kbd>←</kbd>/<kbd>→</kbd> one frame, <kbd>Shift</kbd>+<kbd>←</kbd>/<kbd>→</kbd>
-one second, <kbd>Home</kbd> back to the start, <kbd>F</kbd> fullscreen. Add `?t=12.5` to a page's URL to freeze one frame.
+Player keys: <kbd>Space</kbd> play/pause, <kbd>←</kbd>/<kbd>→</kbd> one frame, <kbd>Shift</kbd>+<kbd>←</kbd>/<kbd>→</kbd> one second, <kbd>Home</kbd> back to the start, <kbd>F</kbd> fullscreen.
 
-## Layout
-
-| Path | What it is |
-|---|---|
-| `lib/` | the engine: the film clock, the player and the shared drawing code |
-| `sequences/seq-NN/film.js` | the drawing code of one sequence, in both formats |
-| `sequences/seq-NN/timing.js` | the sequence's length and the start and end of each of its shots |
-| `fonts/` | Noto Sans SemiBold and Noto Sans Condensed Black |
+---
 
 ## Author & Credits
 
-- **Creator, Animator & Director:** [Raisul Sohan](https://raisulsohan.com) ([@raisulsohan](https://github.com/raisulsohan))
-- **Production:** Nomolos Documentaries (Episode 01)
-- **Animation & Engine:** Handcrafted by Raisul Sohan using procedural vector mathematics and HTML5 Canvas 2D drawing code.
+- **Creator, Director, Screenwriter & Lead Animator:** [Raisul Sohan](https://raisulsohan.com) ([@raisulsohan](https://github.com/raisulsohan))
+- **Art Direction & Vector Illustration:** Hand-illustrated by Raisul Sohan
+- **Motion Animation & Compositing:** Crafted in Adobe After Effects by Raisul Sohan
+- **Sound Design, SFX, BGM & Audio Scoring:** Curated, edited, and composed by Raisul Sohan from free audio archives
+- **Production:** Nomolos Documentaries (Episode 01 · Prohibition)
 
 ## License
 
